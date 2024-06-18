@@ -17,7 +17,6 @@ import { AnimatedPopover, Avatar, CreateButtonWithTeamsList, showToast } from "@
 import { FilterResults } from "../../../filters/components/FilterResults";
 import { TeamsFilter } from "../../../filters/components/TeamsFilter";
 import { getTeamsFiltersFromQuery } from "../../../filters/lib/getTeamsFiltersFromQuery";
-import LicenseRequired from "../../common/components/LicenseRequired";
 import EmptyScreen from "../components/EmptyScreen";
 import SkeletonLoader from "../components/SkeletonLoaderList";
 import WorkflowList from "../components/WorkflowListPage";
@@ -52,51 +51,51 @@ function WorkflowsPage() {
 
   return (
     <Shell withoutMain>
-      <LicenseRequired>
-        <ShellMain
-          heading={t("workflows")}
-          subtitle={t("workflows_to_automate_notifications")}
-          title="Workflows"
-          description="Create workflows to automate notifications and reminders."
-          hideHeadingOnMobile
-          CTA={
-            session.data?.hasValidLicense ? (
-              <CreateButtonWithTeamsList
-                subtitle={t("new_workflow_subtitle").toUpperCase()}
-                createFunction={(teamId?: number) => {
-                  createMutation.mutate({ teamId });
-                }}
-                isPending={createMutation.isPending}
-                disableMobileButton={true}
-                onlyShowWithNoTeams={true}
-              />
-            ) : null
-          }>
-          <>
-            {queryRes.data?.totalCount ? (
-              <div className="flex">
-                <TeamsFilter />
-                <div className="ml-auto">
-                  <CreateButtonWithTeamsList
-                    subtitle={t("new_workflow_subtitle").toUpperCase()}
-                    createFunction={(teamId?: number) => createMutation.mutate({ teamId })}
-                    isPending={createMutation.isPending}
-                    disableMobileButton={true}
-                    onlyShowWithTeams={true}
-                  />
-                </div>
+      {/* <LicenseRequired> */}
+      <ShellMain
+        heading={t("workflows")}
+        subtitle={t("workflows_to_automate_notifications")}
+        title="Workflows"
+        description="Create workflows to automate notifications and reminders."
+        hideHeadingOnMobile
+        CTA={
+          session.data ? (
+            <CreateButtonWithTeamsList
+              subtitle={t("new_workflow_subtitle").toUpperCase()}
+              createFunction={(teamId?: number) => {
+                createMutation.mutate({ teamId });
+              }}
+              isPending={createMutation.isPending}
+              disableMobileButton={true}
+              onlyShowWithNoTeams={true}
+            />
+          ) : null
+        }>
+        <>
+          {queryRes.data?.totalCount ? (
+            <div className="flex">
+              <TeamsFilter />
+              <div className="ml-auto">
+                <CreateButtonWithTeamsList
+                  subtitle={t("new_workflow_subtitle").toUpperCase()}
+                  createFunction={(teamId?: number) => createMutation.mutate({ teamId })}
+                  isPending={createMutation.isPending}
+                  disableMobileButton={true}
+                  onlyShowWithTeams={true}
+                />
               </div>
-            ) : null}
-            <FilterResults
-              queryRes={queryRes}
-              emptyScreen={<EmptyScreen isFilteredView={false} />}
-              noResultsScreen={<EmptyScreen isFilteredView={true} />}
-              SkeletonLoader={SkeletonLoader}>
-              <WorkflowList workflows={queryRes.data?.filtered} />
-            </FilterResults>
-          </>
-        </ShellMain>
-      </LicenseRequired>
+            </div>
+          ) : null}
+          <FilterResults
+            queryRes={queryRes}
+            emptyScreen={<EmptyScreen isFilteredView={false} />}
+            noResultsScreen={<EmptyScreen isFilteredView={true} />}
+            SkeletonLoader={SkeletonLoader}>
+            <WorkflowList workflows={queryRes.data?.filtered} />
+          </FilterResults>
+        </>
+      </ShellMain>
+      {/* </LicenseRequired> */}
     </Shell>
   );
 }
