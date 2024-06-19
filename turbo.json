@@ -60,7 +60,6 @@
         "NEXTAUTH_SECRET"
       ]
     },
-
     "@calcom/website#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**"],
